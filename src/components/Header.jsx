@@ -11,7 +11,7 @@ import { motion } from 'framer-motion';
 const navItems = [
   { label: 'Bosh sahifa', path: '/' },
   { label: 'E’lonlar', path: '/announcements' },
-  { label: 'Galereya', path: '/images' },
+  { label: 'Rasimlar', path: '/images' },
 ];
 
 const Header = () => {

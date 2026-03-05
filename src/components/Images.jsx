@@ -86,8 +86,8 @@ const Images = () => {
       <Container maxWidth="xl">
         
         {/* Sarlavha */}
-        <Typography variant="h3" align="center" sx={{ fontWeight: 900, mb: 6, letterSpacing: 2 }}>
-          GALEREYA
+        <Typography variant="h3" align="center" sx={{ fontWeight: 900, mb: 6, mt: 10, letterSpacing: 2 }}>
+          Rasimlar
         </Typography>
 
         {/* 3 TA RASM BIR QATORDA BO'LISHI UCHUN: sm={4} md={4} */}

@@ -1,26 +1,17 @@
 import React, { useState } from "react";
 import { 
-  Card, 
-  CardMedia, 
-  Typography, 
-  Box, 
-  Container,
-  IconButton,
-  Dialog,
-  DialogContent,
-  useTheme,
-  useMediaQuery,
-  Paper
+  Card, CardMedia, Typography, Box, Container, IconButton, 
+  Dialog, useTheme, useMediaQuery, alpha, Grid, Stack
 } from "@mui/material";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ZoomIn as ZoomInIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
-  Close as CloseIcon,
-  PhotoLibrary as GalleryIcon
+  Close as CloseIcon
 } from "@mui/icons-material";
 
-// Import your images
+// Rasmlar importi (O'zgarishsiz)
 import img1 from "../assets/img1.jpg";
 import img3 from "../assets/img3.jpg";
 import img4 from "../assets/img4.jpg";
@@ -40,326 +31,127 @@ import img17 from "../assets/img17.jpg";
 import img18 from "../assets/img18.jpg";
 import img19 from "../assets/img19.jpg";
 import img20 from "../assets/img20.jpg";
+import img21 from '../assets/img21.jpg';
+import img22 from "../assets/img22.jpg";
+import img23 from "../assets/img23.jpg";
+import img24 from "../assets/img24.jpg";
+import img25 from "../assets/img25.jpg";
+import img26 from "../assets/img26.jpg";
 
-const images = [
-  { src: img1, title: "Matematika darsi", category: "Ta'lim" },
-  { src: img3, title: "Dasturlash workshop", category: "Texnologiya" },
-  { src: img4, title: "Ilmiy tadqiqot", category: "Fan" },
-  { src: img5, title: "Robototexnika", category: "Muhandislik" },
-  { src: img6, title: "Grafik dizayn", category: "San'at" },
-  { src: img7, title: "Sun'iy intellekt", category: "AI" },
-  { src: img8, title: "Data Science", category: "Analitika" },
-  { src: img9, title: "Web dasturlash", category: "Texnologiya" },
-  { src: img10, title: "Mobile development", category: "Texnologiya" },
-  { src: img11, title: "Cyber security", category: "Xavfsizlik" },
-  { src: img12, title: "Cloud computing", category: "Texnologiya" },
-  { src: img13, title: "IoT loyihasi", category: "Internet of Things" },
-  { src: img14, title: "3D modeling", category: "Dizayn" },
-  { src: img15, title: "Game development", category: "O'yinlar" },
-  { src: img16, title: "Machine Learning", category: "AI" },
-  { src: img17, title: "Blockchain", category: "Texnologiya" },
-  { src: img18, title: "AR/VR", category: "Virtual Reality" },
-  { src: img19, title: "Big Data", category: "Analitika" },
-  { src: img20, title: "DevOps", category: "Texnologiya" }
+const imagesData = [
+  { src: img1, title: "Matematika darsi", color: "#4361ee" },
+  { src: img3, title: "Dasturlash workshop", color: "#4cc9f0" },
+  { src: img4, title: "Ilmiy tadqiqot", color: "#4895ef" },
+  { src: img5, title: "Robototexnika", color: "#f72585" },
+  { src: img6, title: "Grafik dizayn", color: "#7209b7" },
+  { src: img7, title: "Sun'iy intellekt", color: "#00f5d4" },
+  { src: img8, title: "Data Science", color: "#480ca8" },
+  { src: img9, title: "Web dars", color: "#4cc9f0" },
+  { src: img10, title: "Mobile dev", color: "#4cc9f0" },
+  { src: img11, title: "Cyber security", color: "#f72585" },
+  { src: img12, title: "Cloud computing", color: "#4361ee" },
+  { src: img13, title: "IoT loyihasi", color: "#00f5d4" },
+  { src: img14, title: "3D modeling", color: "#7209b7" },
+  { src: img15, title: "Game dev", color: "#f72585" },
+  { src: img16, title: "Machine Learning", color: "#00f5d4" },
+  { src: img17, title: "Blockchain", color: "#4cc9f0" },
+  { src: img18, title: "AR/VR", color: "#4361ee" },
+  { src: img19, title: "Big Data", color: "#480ca8" },
+  { src: img20, title: "DevOps", color: "#4cc9f0" },
+  { src: img24, title: "Taqdirlash", color: "#480ca8" },
+  { src: img23, title: "Intellektual o'yin", color: "#4361ee" },
+  { src: img21, title: "Zakovat bahsi", color: "#00f5d4" },
+  { src: img22, title: "Mantiqiy savollar", color: "#4cc9f0" },
+  { src: img25, title: "Jamoaviy ish", color: "#4cc9f0" },
+  { src: img26, title: "Final", color: "#4cc9f0" }
 ];
 
 const Images = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
   const [open, setOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedIdx, setSelectedIdx] = useState(0);
 
-  const handleOpen = (index) => {
-    setSelectedImage(index);
+  const handleOpen = (idx) => {
+    setSelectedIdx(idx);
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleNext = () => {
-    setSelectedImage((prev) => (prev + 1) % images.length);
-  };
-
-  const handlePrev = () => {
-    setSelectedImage((prev) => (prev - 1 + images.length) % images.length);
-  };
-
-  const getCategoryColor = (category) => {
-    const colors = {
-      "Ta'lim": "#3f51b5",
-      "Texnologiya": "#2196f3",
-      "Fan": "#4caf50",
-      "Muhandislik": "#ff9800",
-      "San'at": "#9c27b0",
-      "AI": "#f44336",
-      "Analitika": "#009688",
-      "Xavfsizlik": "#673ab7",
-      "Internet of Things": "#00bcd4",
-      "Dizayn": "#e91e63",
-      "O'yinlar": "#ff5722",
-      "Virtual Reality": "#795548"
-    };
-    return colors[category] || "#607d8b";
-  };
+  const handleClose = () => setOpen(false);
+  const handleNext = () => setSelectedIdx((p) => (p + 1) % imagesData.length);
+  const handlePrev = () => setSelectedIdx((p) => (p - 1 + imagesData.length) % imagesData.length);
 
   return (
-    <Box sx={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%)',
-      py: { xs: 3, md: 5 }
-    }}>
+    <Box sx={{ bgcolor: '#020617', color: 'white', minHeight: '100vh', py: 6 }}>
       <Container maxWidth="xl">
-        {/* Simple Header */}
-        <Box sx={{ 
-          textAlign: 'center', 
-          mb: { xs: 4, md: 5 }
-        }}>
-          <Typography 
-            variant={isMobile ? "h4" : "h3"} 
-            sx={{ 
-              fontWeight: 800,
-              background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              mb: 1
-            }}
-          >
-            Galereya
-          </Typography>
-          <Typography variant="h6" color="text.secondary">
-            {images.length} ta professional rasm
-          </Typography>
-        </Box>
+        
+        {/* Sarlavha */}
+        <Typography variant="h3" align="center" sx={{ fontWeight: 900, mb: 6, letterSpacing: 2 }}>
+          GALEREYA
+        </Typography>
 
-        {/* Gallery Grid */}
-        <Box sx={{ 
-          display: 'grid',
-          gridTemplateColumns: {
-            xs: '1fr',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(3, 1fr)'
-          },
-          gap: { xs: 2, sm: 3, md: 4 }
-        }}>
-          {images.map((img, idx) => (
-            <Box 
-              key={idx} 
-              sx={{ 
-                position: 'relative',
-                cursor: 'pointer'
-              }}
-              onClick={() => handleOpen(idx)}
-            >
-              <Card 
-                sx={{ 
-                  width: '100%',
-                  height: { xs: 280, sm: 250, md: 280 },
-                  borderRadius: 3,
-                  overflow: "hidden", 
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-                  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                  position: 'relative',
-                  '&:hover': { 
-                    transform: "translateY(-12px)",
-                    boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
-                    '& .overlay': {
-                      opacity: 1
-                    },
-                    '& .image': {
-                      transform: "scale(1.05)"
-                    }
-                  }
-                }}
-              >
-                {/* Image */}
-                <CardMedia
-                  component="img"
-                  image={img.src}
-                  alt={img.title}
-                  className="image"
-                  sx={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    transition: "transform 0.6s ease"
-                  }}
-                />
-
-                {/* Overlay on hover */}
-                <Box 
-                  className="overlay"
-                  sx={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)',
-                    opacity: 0,
-                    transition: 'opacity 0.3s ease',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                    p: 3
+        {/* 3 TA RASM BIR QATORDA BO'LISHI UCHUN: sm={4} md={4} */}
+        <Grid container spacing={3}>
+          {imagesData.map((img, idx) => (
+            <Grid item xs={12} sm={4} md={4} key={idx}> 
+              <motion.div whileHover={{ y: -10 }} transition={{ duration: 0.3 }}>
+                <Card 
+                  onClick={() => handleOpen(idx)}
+                  sx={{ 
+                    borderRadius: '16px', bgcolor: '#0f172a', cursor: 'pointer',
+                    border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden',
+                    position: 'relative'
                   }}
                 >
-                  <Typography 
-                    variant="h6" 
+                  <CardMedia
+                    component="img"
+                    image={img.src}
+                    alt={img.title}
                     sx={{ 
-                      color: 'white', 
-                      fontWeight: 600,
-                      mb: 1 
+                      height: 210, // Balandlikni qat'iy belgiladik
+                      width: '100%',
+                      objectFit: 'cover', // Rasm buzilmasligi uchun
+                      display: 'block' 
                     }}
-                  >
-                    {img.title}
-                  </Typography>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Box 
-                      sx={{ 
-                        bgcolor: getCategoryColor(img.category),
-                        color: 'white',
-                        px: 2,
-                        py: 0.5,
-                        borderRadius: 1,
-                        fontWeight: 500,
-                        fontSize: '0.875rem'
-                      }}
-                    >
-                      {img.category}
-                    </Box>
-                    <IconButton 
-                      size="small" 
-                      sx={{ 
-                        color: 'white',
-                        bgcolor: 'rgba(255,255,255,0.2)',
-                        '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' }
-                      }}
-                    >
-                      <ZoomInIcon />
-                    </IconButton>
+                  />
+                  
+                  {/* Overlay */}
+                  <Box sx={{
+                    position: 'absolute', bottom: 0, left: 0, right: 0, p: 2,
+                    background: 'linear-gradient(transparent, rgba(0,0,0,0.8))'
+                  }}>
+                    <Typography variant="subtitle1" fontWeight={700}>{img.title}</Typography>
                   </Box>
-                </Box>
-              </Card>
-            </Box>
+                </Card>
+              </motion.div>
+            </Grid>
           ))}
-        </Box>
+        </Grid>
       </Container>
 
-      {/* Image Preview Dialog */}
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        maxWidth="lg"
-        fullWidth
-        PaperProps={{
-          sx: {
-            bgcolor: 'transparent',
-            boxShadow: 'none',
-            overflow: 'visible'
-          }
-        }}
-      >
-        <DialogContent sx={{ p: 0, position: 'relative' }}>
-          <IconButton
-            onClick={handleClose}
-            sx={{
-              position: 'absolute',
-              top: -40,
-              right: 0,
-              color: 'white',
-              bgcolor: 'rgba(0,0,0,0.5)',
-              '&:hover': { bgcolor: 'rgba(0,0,0,0.7)' }
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-
-          <IconButton
-            onClick={handlePrev}
-            sx={{
-              position: 'absolute',
-              left: -20,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: 'white',
-              bgcolor: 'rgba(0,0,0,0.5)',
-              '&:hover': { bgcolor: 'rgba(0,0,0,0.7)' }
-            }}
-          >
-            <ChevronLeftIcon />
-          </IconButton>
-
-          <IconButton
-            onClick={handleNext}
-            sx={{
-              position: 'absolute',
-              right: -20,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: 'white',
-              bgcolor: 'rgba(0,0,0,0.5)',
-              '&:hover': { bgcolor: 'rgba(0,0,0,0.7)' }
-            }}
-          >
-            <ChevronRightIcon />
-          </IconButton>
-
-          <Box
-            component="img"
-            src={images[selectedImage].src}
-            alt={images[selectedImage].title}
-            sx={{
-              width: '100%',
-              height: 'auto',
-              maxHeight: '80vh',
-              objectFit: 'contain',
-              borderRadius: 2
-            }}
-          />
-
-          {/* Image info */}
-          <Paper
-            sx={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              p: 3,
-              bgcolor: 'rgba(0,0,0,0.7)',
-              color: 'white',
-              borderBottomLeftRadius: 2,
-              borderBottomRightRadius: 2
-            }}
-          >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Box>
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  {images[selectedImage].title}
-                </Typography>
-                <Box 
-                  sx={{ 
-                    display: 'inline-block',
-                    bgcolor: getCategoryColor(images[selectedImage].category),
-                    color: 'white',
-                    px: 2,
-                    py: 0.5,
-                    borderRadius: 1,
-                    mt: 1,
-                    fontSize: '0.875rem'
-                  }}
-                >
-                  {images[selectedImage].category}
-                </Box>
-              </Box>
-            </Box>
-            <Typography variant="caption" sx={{ opacity: 0.8, display: 'block', mt: 1 }}>
-              {selectedImage + 1} / {images.length}
-            </Typography>
-          </Paper>
-        </DialogContent>
+      {/* Lightbox Dialog */}
+      <Dialog fullScreen open={open} onClose={handleClose} PaperProps={{ sx: { bgcolor: '#020617' } }}>
+        <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+          <Stack direction="row" justifyContent="flex-end" sx={{ p: 2 }}>
+            <IconButton onClick={handleClose} sx={{ color: 'white' }}><CloseIcon fontSize="large"/></IconButton>
+          </Stack>
+          
+          <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+            <IconButton onClick={handlePrev} sx={{ position: 'absolute', left: 20, color: 'white' }}><ChevronLeftIcon fontSize="large"/></IconButton>
+            
+            <img 
+              src={imagesData[selectedIdx].src} 
+              style={{ maxHeight: '80vh', maxWidth: '90%', borderRadius: '12px', objectFit: 'contain' }} 
+              alt="selected"
+            />
+            
+            <IconButton onClick={handleNext} sx={{ position: 'absolute', right: 20, color: 'white' }}><ChevronRightIcon fontSize="large"/></IconButton>
+          </Box>
+          
+          <Box sx={{ p: 4, textAlign: 'center' }}>
+            <Typography variant="h4" fontWeight={800}>{imagesData[selectedIdx].title}</Typography>
+          </Box>
+        </Box>
       </Dialog>
     </Box>
   );

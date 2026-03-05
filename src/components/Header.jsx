@@ -1,126 +1,190 @@
-import * as React from 'react'
-import AppBar from '@mui/material/AppBar'
-import Box from '@mui/material/Box'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import Drawer from '@mui/material/Drawer'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemText from '@mui/material/ListItemText'
-import MenuIcon from '@mui/icons-material/Menu'
-import CloseIcon from '@mui/icons-material/Close'
-import { Link } from 'react-router-dom'
-import Logo from '../assets/maktab.png'
+import React, { useState } from 'react';
+import { 
+  AppBar, Toolbar, Typography, Button, IconButton, Drawer, 
+  List, ListItem, ListItemButton, ListItemText, Box, Container, 
+  alpha 
+} from '@mui/material';
+import { Menu, X, Zap, School } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const navItems = [
-  { label: 'Images', path: '/images' },
-  { label: 'Announcements', path: '/announcements' }
-]
+  { label: 'Bosh sahifa', path: '/' },
+  { label: 'E’lonlar', path: '/announcements' },
+  { label: 'Galereya', path: '/images' },
+];
 
 const Header = () => {
-  const [mobileOpen, setMobileOpen] = React.useState(false)
-
-  const openDrawer = () => setMobileOpen(true)
-  const closeDrawer = () => setMobileOpen(false)
-
-  const drawer = (
-    <Box sx={{ width: 280 }}>
-      {/* Drawer header */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          p: 2
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <img width={36} height={36} src={Logo} alt="Logo" />
-          <Typography fontWeight={600}>13-maktab</Typography>
-        </Box>
-
-        {/* Close button */}
-        <IconButton onClick={closeDrawer}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
-
-      <List>
-        {navItems.map((item) => (
-          <ListItem key={item.path} disablePadding>
-            <ListItemButton component={Link} to={item.path} onClick={closeDrawer}>
-              <ListItemText primary={item.label} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  )
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" elevation={3}>
-        <Toolbar>
-          {/* Logo + 13-maktab (LEFT) */}
-          <Box
-            component={Link}
-            to="/"
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1,
-              textDecoration: 'none',
-              color: 'inherit'
+    <AppBar 
+      position="fixed" 
+      elevation={0}
+      sx={{
+        // Doimiy blur va shaffof fon
+        background: 'rgba(2, 6, 23, 0.45)', 
+        backdropFilter: 'blur(12px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(12px) saturate(180%)', // Safari uchun
+        borderBottom: `1px solid ${alpha('#4cc9f0', 0.15)}`,
+        transition: 'all 0.3s ease',
+        top: 0,
+        zIndex: 1100,
+      }}
+    >
+      <Container maxWidth="lg">
+        <Toolbar sx={{ justifyContent: 'space-between', height: { xs: 70, md: 85 } }}>
+          
+          {/* LOGO */}
+          <Box 
+            component={Link} 
+            to="/" 
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 1.5, 
+              textDecoration: 'none', 
+              color: 'inherit' 
             }}
           >
-            <img width={45} height={45} src={Logo} alt="Logo" />
-            <Typography fontWeight={700}>13-maktab</Typography>
+            <motion.div 
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              style={{
+                background: 'linear-gradient(135deg, #4361ee, #4cc9f0)',
+                padding: '10px',
+                borderRadius: '14px',
+                display: 'flex',
+                boxShadow: '0 4px 15px rgba(67, 97, 238, 0.4)'
+              }}
+            >
+              <Zap size={22} color="white" fill="white" />
+            </motion.div>
+            
+            <Typography 
+              variant="h6" 
+              fontWeight="900" 
+              sx={{ 
+                letterSpacing: 1.5,
+                background: 'linear-gradient(90deg, #fff, #4cc9f0)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontSize: { xs: '1.1rem', md: '1.4rem' }
+              }}
+            >
+              13-MAKTAB
+            </Typography>
           </Box>
 
-          {/* Spacer */}
-          <Box sx={{ flexGrow: 1 }} />
-
-          {/* Desktop navigation */}
-          <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-            {navItems.map((item) => (
-              <Button
-                key={item.path}
-                color="inherit"
-                component={Link}
-                to={item.path}
-              >
-                {item.label}
-              </Button>
-            ))}
-          </Box>
-
-          {/* Mobile menu icon (RIGHT) */}
-          <IconButton
-            color="inherit"
-            edge="end"
-            onClick={openDrawer}
-            sx={{ display: { xs: 'block', md: 'none' }, ml: 1 }}
+          {/* DESKTOP MENU */}
+          <Box 
+            sx={{ 
+              display: { xs: 'none', md: 'flex' }, 
+              gap: 1,
+              p: 0.6,
+              borderRadius: '50px',
+              bgcolor: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+            }}
           >
-            <MenuIcon />
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <Button
+                  key={item.path}
+                  component={Link}
+                  to={item.path}
+                  sx={{
+                    px: 3,
+                    py: 1,
+                    borderRadius: '50px',
+                    fontWeight: 700,
+                    textTransform: 'none',
+                    color: isActive ? '#fff' : 'rgba(255,255,255,0.7)',
+                    background: isActive 
+                      ? 'linear-gradient(135deg, #4361ee, #4cc9f0)' 
+                      : 'transparent',
+                    transition: '0.3s',
+                    '&:hover': {
+                      color: '#fff',
+                      bgcolor: isActive ? '' : 'rgba(255,255,255,0.1)',
+                    }
+                  }}
+                >
+                  {item.label}
+                </Button>
+              );
+            })}
+          </Box>
+
+          {/* MOBILE TOGGLE */}
+          <IconButton 
+            sx={{ 
+              display: { md: 'none' }, 
+              color: '#fff',
+              bgcolor: 'rgba(255, 255, 255, 0.08)'
+            }} 
+            onClick={() => setMobileOpen(true)}
+          >
+            <Menu size={24} />
           </IconButton>
+
         </Toolbar>
-      </AppBar>
+      </Container>
 
-      {/* RIGHT Drawer */}
-      <Drawer
-        anchor="right"
-        open={mobileOpen}
-        onClose={closeDrawer}
-        ModalProps={{ keepMounted: true }}
-        sx={{ display: { xs: 'block', md: 'none' } }}
+      {/* MOBILE DRAWER */}
+      <Drawer 
+        anchor="right" 
+        open={mobileOpen} 
+        onClose={() => setMobileOpen(false)}
+        PaperProps={{
+          sx: {
+            width: 280,
+            background: 'rgba(2, 6, 23, 0.95)',
+            backdropFilter: 'blur(10px)',
+            color: '#fff',
+            borderLeft: '1px solid rgba(76, 201, 240, 0.2)'
+          }
+        }}
       >
-        {drawer}
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 4 }}>
+            <IconButton onClick={() => setMobileOpen(false)} sx={{ color: '#fff' }}>
+              <X size={28} />
+            </IconButton>
+          </Box>
+          
+          <List>
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <ListItem key={item.path} disablePadding sx={{ mb: 1.5 }}>
+                  <ListItemButton 
+                    component={Link} 
+                    to={item.path} 
+                    onClick={() => setMobileOpen(false)}
+                    sx={{
+                      borderRadius: '12px',
+                      bgcolor: isActive ? alpha('#4361ee', 0.15) : 'transparent',
+                      border: isActive ? `1px solid ${alpha('#4361ee', 0.4)}` : '1px solid transparent',
+                    }}
+                  >
+                    <ListItemText 
+                      primary={item.label} 
+                      primaryTypographyProps={{ 
+                        fontWeight: isActive ? 800 : 500,
+                        color: isActive ? '#4cc9f0' : '#fff'
+                      }} 
+                    />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+          </List>
+        </Box>
       </Drawer>
-    </Box>
-  )
-}
+    </AppBar>
+  );
+};
 
-export default Header
+export default Header;

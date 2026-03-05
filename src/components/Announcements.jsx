@@ -1,600 +1,238 @@
 import React, { useState } from 'react';
-import {
-  Container,
-  Typography,
-  Box,
-  Paper,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Chip,
-  Button,
-  Grid,
-  Divider,
-  useTheme,
-  useMediaQuery,
-  Card,
-  CardContent,
-  Avatar,
-  Stepper,
-  Step,
-  StepLabel,
-  StepContent,
-  Alert,
-  alpha
+import { 
+  Box, Typography, Container, Paper, Button, alpha, Stack, Grid, 
+  Accordion, AccordionSummary, AccordionDetails, List, ListItem, 
+  ListItemIcon, ListItemText, Chip 
 } from '@mui/material';
+import { motion } from 'framer-motion';
 import {
   ExpandMore as ExpandMoreIcon,
   CheckCircle as CheckIcon,
-  Groups as GroupsIcon,
-  School as SchoolIcon,
   EmojiEvents as TrophyIcon,
   CalendarMonth as CalendarIcon,
-  Female as FemaleIcon,
   Engineering as EngineeringIcon,
   Science as ScienceIcon,
-  Apartment as ApartmentIcon,
-  Gavel as GavelIcon,
   Assignment as AssignmentIcon,
-  AccountBalance as BalanceIcon,
-  TrendingUp as TrendingIcon,
-  ArrowForward as ArrowIcon
+  Gavel as GavelIcon,
+  ArrowForward as ArrowIcon,
+  Lightbulb as IdeaIcon,
 } from '@mui/icons-material';
 
-const Announcements = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+// Shaffof karta komponenti (Main.jsx dagi bilan bir xil dizayn)
+const InfoCard = ({ icon, title, text, color, delay }) => (
+  <Grid item xs={12} md={4}>
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: delay }}
+      viewport={{ once: true }}
+    >
+      <Paper
+        elevation={0}
+        sx={{
+          p: 3,
+          height: '100%',
+          background: 'rgba(255, 255, 255, 0.03)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '20px',
+          border: `1px solid ${alpha(color, 0.2)}`,
+          transition: '0.3s',
+          '&:hover': {
+            background: alpha(color, 0.05),
+            transform: 'translateY(-5px)',
+            boxShadow: `0 10px 30px ${alpha(color, 0.1)}`
+          }
+        }}
+      >
+        <Box sx={{ color: color, mb: 2 }}>{icon}</Box>
+        <Typography variant="h6" fontWeight={700} gutterBottom sx={{ color: '#fff' }}>
+          {title}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
+          {text}
+        </Typography>
+      </Paper>
+    </motion.div>
+  </Grid>
+);
 
-  // Accordion state
+const Announcements = () => {
   const [expanded, setExpanded] = useState('section1');
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
-  // Bosqichlar
-  const steps = [
-    {
-      label: "Tuman (Shahar) Bosqichi",
-      description: "Maktab o'quvchilarining 'kuzgi ta'til' davrida",
-      date: "Sentyabr-Oktabr",
-      organizer: "Tuman/shahar ta'lim bo'limlari"
-    },
-    {
-      label: "Viloyat Bosqichi",
-      description: "Maktab o'quvchilarining 'qishki ta'til' davrida",
-      date: "Dekabr-Yanvar",
-      organizer: "Viloyat ta'lim boshqarmalari"
-    },
-    {
-      label: "Respublika Bosqichi",
-      description: "Asosiy tashkilotchilar belgilagan muddatlarda",
-      date: "Mart-Aprel",
-      organizer: "Respublika tashkiliy qo'mitasi"
-    }
-  ];
-
-  // Yo'nalishlar
-  const directions = [
-    { name: "Ta'lim va ilm", icon: <SchoolIcon />, color: "#3f51b5" },
-    { name: "Sun'iy Intellekt", icon: <EngineeringIcon />, color: "#2196f3" },
-    { name: "Iqlim O'zgarishi", icon: <ScienceIcon />, color: "#4caf50" },
-  ];
-
-  // Yosh toifalari
-  const ageCategories = [
-    { range: "16-20 yosh", participants: "O'rta ta'lim o'quvchilari" },
-    { range: "21-30 yosh", participants: "Oliy ta'lim talabalari va yosh mutaxassislar" }
-  ];
-
-  // Tashkilotchilar
-  const organizers = [
-    { name: "Maktabgacha va maktab ta'limi vazirligi", role: "Asosiy tashkilotchi" },
-    { name: "Ixtisoslashtirilgan ta'lim muassasalari agentligi", role: "Asosiy tashkilotchi" },
-    { name: "Bolalar kontentini rivojlantirish markazi", role: "Asosiy tashkilotchi" },
-    { name: "Digital Generation Uzbekistan", role: "Nodavlat notijorat tashkiloti" }
-  ];
-
   return (
-    <Box sx={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f5f7ff 0%, #fff0f7 100%)',
-      py: { xs: 3, md: 5 }
-    }}>
-      <Container maxWidth="lg">
-        {/* Sarlavha */}
-        <Box sx={{ 
-          textAlign: 'center', 
-          mb: { xs: 4, md: 6 },
-          position: 'relative'
-        }}>
-          <Chip 
-            label="Rasmiy E'lon" 
-            color="primary" 
-            sx={{ 
-              mb: 2,
-              fontWeight: 600,
-              fontSize: { xs: '0.8rem', sm: '0.9rem' }
-            }}
+    <Box sx={{ bgcolor: '#020617', color: 'white', minHeight: '100vh', pb: 10 }}>
+      
+      {/* 1. HERO SECTION - FULL WIDTH IMAGE */}
+      <Box sx={{ position: 'relative', width: '100%', height: '70vh', overflow: 'hidden' }}>
+        <motion.div
+          initial={{ scale: 1.1, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1.5 }}
+          style={{ width: '100%', height: '100%' }}
+        >
+          <Box
+            component="img"
+            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1920&q=80"
+            sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
-          
-          <Typography 
-            variant={isMobile ? "h4" : "h3"} 
-            sx={{ 
-              fontWeight: 800,
-              background: 'linear-gradient(45deg, #e91e63 30%, #9c27b0 90%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              mb: 2
-            }}
-          >
-            "Raqamli Avlod Qizlari" Tanlovi
-          </Typography>
-          
-          <Typography 
-            variant="h6" 
-            color="text.secondary"
-            sx={{ 
-              maxWidth: '800px', 
-              mx: 'auto',
-              mb: 3,
-              fontSize: { xs: '1rem', sm: '1.1rem' }
-            }}
-          >
-            Iqtidorli qizlarni kashf qilish hamda ularning ilmiy-tadqiqot va innovatsion 
-            faoliyatini samarali yo'lga qo'yish uchun qo'shimcha shart-sharoitlar yaratish
-          </Typography>
-
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            gap: 2,
-            flexWrap: 'wrap',
-            mt: 4
-          }}>
-            <Chip 
-              icon={<FemaleIcon />} 
-              label="Faqat Qizlar" 
-              color="secondary"
-              sx={{ fontWeight: 600 }}
-            />
-            <Chip 
-              icon={<TrophyIcon />} 
-              label="3 Bosqichli" 
-              sx={{ 
-                bgcolor: alpha(theme.palette.primary.main, 0.1),
-                color: theme.palette.primary.main,
-                fontWeight: 600
-              }}
-            />
-            <Chip 
-              icon={<CalendarIcon />} 
-              label="2024-2025" 
-              sx={{ 
-                bgcolor: alpha(theme.palette.success.main, 0.1),
-                color: theme.palette.success.main,
-                fontWeight: 600
-              }}
-            />
-          </Box>
-        </Box>
-
-        {/* Tanlov Bosqichlari */}
-        <Paper 
-          elevation={0}
-          sx={{ 
-            p: { xs: 3, md: 4 },
-            mb: { xs: 4, md: 5 },
-            borderRadius: 3,
-            background: 'white',
-            border: '1px solid',
-            borderColor: 'divider'
-          }}
-        >
-          <Typography variant="h5" sx={{ fontWeight: 700, mb: 3, color: '#e91e63' }}>
-            Tanlov Bosqichlari
-          </Typography>
-          
-          <Stepper orientation={isMobile ? "vertical" : "horizontal"}>
-            {steps.map((step) => (
-              <Step key={step.label} active={true}>
-                <StepLabel
-                  StepIconProps={{
-                    sx: {
-                      '& .MuiStepIcon-root': {
-                        color: '#e91e63',
-                        width: 32,
-                        height: 32
-                      }
-                    }
-                  }}
-                >
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                    {step.label}
-                  </Typography>
-                </StepLabel>
-                <StepContent>
-                  <Box sx={{ mt: 1, pl: 2 }}>
-                    <Typography variant="body2" color="text.secondary">
-                      {step.description}
-                    </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, gap: 1 }}>
-                      <CalendarIcon sx={{ fontSize: 16, color: '#e91e63' }} />
-                      <Typography variant="caption" sx={{ fontWeight: 500 }}>
-                        {step.date}
-                      </Typography>
-                    </Box>
-                    <Typography variant="caption" color="text.secondary">
-                      Tashkilotchi: {step.organizer}
-                    </Typography>
-                  </Box>
-                </StepContent>
-              </Step>
-            ))}
-          </Stepper>
-        </Paper>
-
-        {/* Grid Layout */}
-        <Grid container spacing={4}>
-          {/* Yo'nalishlar */}
-          <Grid item xs={12} md={6}>
-            <Paper 
-              elevation={0}
-              sx={{ 
-                p: { xs: 3, md: 4 },
-                height: '100%',
-                borderRadius: 3,
-                background: 'white',
-                border: '1px solid',
-                borderColor: 'divider'
-              }}
-            >
-              <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, color: '#3f51b5' }}>
-                Yo'nalishlar
-              </Typography>
-              
-              <Grid container spacing={2}>
-                {directions.map((dir) => (
-                  <Grid item xs={6} key={dir.name}>
-                    <Card 
-                      sx={{ 
-                        height: '100%',
-                        width: '200px',
-                        background: alpha(dir.color, 0.05),
-                        border: `2px solid ${alpha(dir.color, 0.2)}`,
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          transform: 'translateY(-4px)',
-                          borderColor: dir.color,
-                          boxShadow: `0 8px 24px ${alpha(dir.color, 0.15)}`
-                        }
-                      }}
-                    >
-                      <CardContent sx={{ textAlign: 'center', p: 3 }}>
-                        <Avatar 
-                          sx={{ 
-                            bgcolor: dir.color, 
-                            width: 56, 
-                            height: 56,
-                            mx: 'auto',
-                            mb: 2,
-                            mt: 2
-                          }}
-                        >
-                          {dir.icon}
-                        </Avatar>
-                        <Typography variant="h6" sx={{ fontWeight: 600, color: dir.color }}>
-                          {dir.name}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </Paper>
-          </Grid>
-
-          {/* Yosh Toifalari */}
-          <Grid item xs={12} md={6}>
-            <Paper 
-              elevation={0}
-              sx={{ 
-                p: { xs: 3, md: 4 },
-                height: '100%',
-                borderRadius: 3,
-                background: 'white',
-                border: '1px solid',
-                borderColor: 'divider'
-              }}
-            >
-              <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, color: '#2196f3' }}>
-                Yosh Toifalari
-              </Typography>
-              
-              <List>
-                {ageCategories.map((category, index) => (
-                  <React.Fragment key={category.range}>
-                    <ListItem sx={{ px: 0 }}>
-                      <ListItemIcon>
-                        <Avatar sx={{ bgcolor: '#2196f3' }}>
-                          {index + 1}
-                        </Avatar>
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                            {category.range}
-                          </Typography>
-                        }
-                        secondary={
-                          <Typography variant="body2" color="text.secondary">
-                            {category.participants}
-                          </Typography>
-                        }
-                      />
-                    </ListItem>
-                    {index < ageCategories.length - 1 && <Divider variant="inset" />}
-                  </React.Fragment>
-                ))}
-              </List>
-            </Paper>
-          </Grid>
-        </Grid>
-
-        {/* Accordion Sections */}
-        <Box sx={{ mt: 5 }}>
-          <Accordion 
-            expanded={expanded === 'section1'} 
-            onChange={handleChange('section1')}
-            sx={{ 
-              mb: 2,
-              borderRadius: '12px !important',
-              '&:before': { display: 'none' }
-            }}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              sx={{ 
-                bgcolor: alpha(theme.palette.primary.main, 0.05),
-                borderRadius: '12px'
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <AssignmentIcon color="primary" />
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  I. Umumiy Qoidalar
-                </Typography>
-              </Box>
-            </AccordionSummary>
-            <AccordionDetails sx={{ pt: 3 }}>
-              <List sx={{ pl: 2 }}>
-                {[
-                  "Mazkur Nizom iqtidorli qizlarni kashf qilish hamda ularning ilmiy-tadqiqot va innovatsion faoliyatini samarali yo'lga qo'yish uchun qo'shimcha shart-sharoitlar yaratish va qo'llab-quvvatlashga qaratilgan.",
-                  "Tanlovda ikki yosh toifasidagi: 16-20 yosh va 21-30 yoshli qizlar o'rtasida g'oliblar aniqlanadi.",
-                  "Tanlov 'ta'lim', 'sun'iy intellekt', 'iqlim o'zgarishi', 'yashil iqtisodiyot' kabi yo'nalishlarni qamrab oladi.",
-                  "Tanlov jarayonlari to'liq video tasvirga olinadi hamda tegishli bosqich tashkiliy qo'mitasi tomonidan kamida bir yil saqlanadi.",
-                  "Tanlovning bir bosqichidan keyingi bosqichiga o'tish vaqtida loyiha nomi va yo'nalishi o'zgartirilmaydi."
-                ].map((item, index) => (
-                  <ListItem key={index} sx={{ px: 0, alignItems: 'flex-start' }}>
-                    <ListItemIcon sx={{ minWidth: 36, mt: 0.5 }}>
-                      <CheckIcon color="primary" fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary={item} />
-                  </ListItem>
-                ))}
-              </List>
-            </AccordionDetails>
-          </Accordion>
-
-          <Accordion 
-            expanded={expanded === 'section2'} 
-            onChange={handleChange('section2')}
-            sx={{ 
-              mb: 2,
-              borderRadius: '12px !important',
-              '&:before': { display: 'none' }
-            }}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              sx={{ 
-                bgcolor: alpha(theme.palette.secondary.main, 0.05),
-                borderRadius: '12px'
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <ApartmentIcon color="secondary" />
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  II. Tanlovni Tashkil Etish Tartibi
-                </Typography>
-              </Box>
-            </AccordionSummary>
-            <AccordionDetails sx={{ pt: 3 }}>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: '#e91e63' }}>
-                Tashkiliy Qo'mita
-              </Typography>
-              <Typography paragraph>
-                Tashkiliy qo'mitaning vazifalari quyidagilardan iborat:
-              </Typography>
-              
-              <Grid container spacing={2} sx={{ mb: 3 }}>
-                {[
-                  "Tanlovning joriy yildagi asosiy ixtisoslik yo'nalishini belgilash",
-                  "Tanlov o'tkaziladigan joyni belgilash va o'tkazish",
-                  "Hakamlar hay'ati tarkibini belgilash",
-                  "Tanlov natijalarini ommaviy axborot vositalarida yoritish",
-                  "Barcha tanlov ishtirokchilari haqidagi ma'lumotlarni axborot tizimiga kiritish"
-                ].map((item, index) => (
-                  <Grid item xs={12} sm={6} key={index}>
-                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, mb: 1 }}>
-                      <CheckIcon sx={{ color: '#4caf50', fontSize: 20, mt: 0.5 }} />
-                      <Typography variant="body2">{item}</Typography>
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-
-              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: '#2196f3' }}>
-                Hakamlar Hay'ati
-              </Typography>
-              <Typography paragraph>
-                Tanlovning barcha bosqichlarida tashkiliy qo'mita tomonidan 3 kishidan 7 kishigacha tarkibda hakamlar hay'ati tuziladi.
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-
-          <Accordion 
-            expanded={expanded === 'section3'} 
-            onChange={handleChange('section3')}
-            sx={{ 
-              mb: 2,
-              borderRadius: '12px !important',
-              '&:before': { display: 'none' }
-            }}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              sx={{ 
-                bgcolor: alpha(theme.palette.success.main, 0.05),
-                borderRadius: '12px'
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <GavelIcon color="success" />
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  III. Qatnashish Tartibi
-                </Typography>
-              </Box>
-            </AccordionSummary>
-            <AccordionDetails sx={{ pt: 3 }}>
-              <Alert severity="info" sx={{ mb: 3 }}>
-                Tanlovda ishtirok etish istagida bo'lgan talabgorlar maxsus onlayn platformada ro'yxatdan o'tishlari talab etiladi.
-              </Alert>
-              
-              <List>
-                {[
-                  "Tanlov ishtirokchilari individual yoki ikki kishidan iborat jamoa sifatida ishtirok etishlari mumkin.",
-                  "Har bir jamoa yoki individual ishtirokchi barcha bosqichlarda ro'yxatdan o'tgan loyihasi bo'yicha ishtirok etadi.",
-                  "Tanlovning bir bosqichidan keyingi bosqichiga o'tish vaqtida loyihani kuchaytirish maqsadida jamoaga qo'shimcha ishtirokchi jalb etish mumkin.",
-                  "Jamoaning dastlabki a'zosi o'zgartirilmaydi."
-                ].map((item, index) => (
-                  <ListItem key={index} sx={{ px: 0, alignItems: 'flex-start' }}>
-                    <ListItemIcon sx={{ minWidth: 36, mt: 0.5 }}>
-                      <TrendingIcon color="primary" fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary={item} />
-                  </ListItem>
-                ))}
-              </List>
-            </AccordionDetails>
-          </Accordion>
-        </Box>
-
-        {/* Tashkilotchilar */}
-        <Paper 
-          elevation={0}
-          sx={{ 
-            p: { xs: 3, md: 4 },
-            mt: 5,
-            borderRadius: 3,
-            background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
-            color: 'white'
-          }}
-        >
-          <Typography variant="h5" sx={{ fontWeight: 700, mb: 4, textAlign: 'center' }}>
-            Asosiy Tashkilotchilar
-          </Typography>
-          
-          <Grid container spacing={3}>
-            {organizers.map((org) => (
-              <Grid item xs={12} sm={6} key={org.name}>
-                <Box sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: 2,
-                  bgcolor: 'rgba(255, 255, 255, 0.1)',
-                  p: 2,
-                  borderRadius: 2,
-                  backdropFilter: 'blur(10px)'
-                }}>
-                  <Avatar sx={{ bgcolor: 'white', color: '#764ba2' }}>
-                    <BalanceIcon />
-                  </Avatar>
-                  <Box>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                      {org.name}
-                    </Typography>
-                    <Typography variant="caption" sx={{ opacity: 0.9 }}>
-                      {org.role}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </Paper>
-
-        {/* Call to Action */}
-        <Box sx={{ 
-          textAlign: 'center', 
-          mt: 6,
-          p: 4,
-          borderRadius: 3,
-          background: 'white',
-          border: '2px dashed',
-          borderColor: '#e91e63'
+        </motion.div>
+        
+        <Box sx={{
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'linear-gradient(to bottom, rgba(2,6,23,0.4) 0%, #020617 100%)',
+          display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+          textAlign: 'center', px: 2
         }}>
-          <Typography variant="h5" sx={{ fontWeight: 700, mb: 2, color: '#e91e63' }}>
-            Tanlovda Qatnashing!
+          <motion.div
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+          >
+            <Typography variant="overline" sx={{ letterSpacing: 6, color: '#f72585', fontWeight: 700 }}>
+              YANGI IMKONIYATLAR
+            </Typography>
+            <Typography variant="h1" sx={{ 
+              fontWeight: 900, fontSize: { xs: '2.5rem', md: '5rem' },
+              mb: 2, background: 'linear-gradient(90deg, #fff, #f72585)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
+            }}>
+              RAQAMLI AVLOD QIZLARI
+            </Typography>
+            <Typography variant="h5" sx={{ color: 'rgba(255,255,255,0.7)', maxWidth: '800px', mx: 'auto', fontWeight: 300 }}>
+              IT va innovatsiyalar sohasida o'z kelajagingizni quring. Tanlovda ishtirok eting va g'olib bo'ling!
+            </Typography>
+          </motion.div>
+        </Box>
+      </Box>
+
+      {/* 2. YO'NALISHLAR KARTALARI */}
+      <Container maxWidth="lg" sx={{ mt: -10, position: 'relative', zIndex: 2 }}>
+        <Grid container spacing={3}>
+          <InfoCard 
+            icon={<EngineeringIcon fontSize="large" />}
+            title="Sun'iy Intellekt"
+            text="AI texnologiyalari va zamonaviy algoritmlarni o'rganish orqali loyihalar yaratish."
+            color="#f72585"
+            delay={0.1}
+          />
+          <InfoCard 
+            icon={<ScienceIcon fontSize="large" />}
+            title="Yashil Texnologiyalar"
+            text="Ekologik muammolarni IT yordamida hal qilish va innovatsion yechimlar topish."
+            color="#4cc9f0"
+            delay={0.2}
+          />
+          <InfoCard 
+            icon={<IdeaIcon fontSize="large" />}
+            title="EdTech Loyihalar"
+            text="Ta'lim tizimini raqamlashtirish va o'quvchilar uchun qulay platformalar yaratish."
+            color="#4361ee"
+            delay={0.3}
+          />
+        </Grid>
+      </Container>
+
+      {/* 3. NIZOM VA QOIDALAR (DARK STYLE ACCORDION) */}
+      <Container maxWidth="md" sx={{ mt: 15 }}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          viewport={{ once: true }}
+        >
+          <Typography variant="h3" fontWeight={800} sx={{ mb: 6, textAlign: 'center', background: 'linear-gradient(90deg, #fff, #4cc9f0)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            Tanlov Nizomi
           </Typography>
-          
-          <Typography variant="body1" sx={{ mb: 3, maxWidth: '600px', mx: 'auto' }}>
-            Raqamli kelajakni shakllantirishda faol rol o'ynash uchun ajoyib imkoniyat.
-            Loyihangiz bilan ro'yxatdan o'ting va g'olib bo'ling!
+
+          <Box sx={{ '& .MuiAccordion-root': { bgcolor: 'rgba(255,255,255,0.02)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', mb: 2, borderRadius: '15px !important', overflow: 'hidden' } }}>
+            
+            <Accordion expanded={expanded === 'section1'} onChange={handleChange('section1')} elevation={0}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#4cc9f0' }} />}>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <AssignmentIcon sx={{ color: '#4cc9f0' }} />
+                  <Typography fontWeight={600}>Umumiy Shartlar</Typography>
+                </Stack>
+              </AccordionSummary>
+              <AccordionDetails sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.01)' }}>
+                <List>
+                  <ListItem>
+                    <ListItemIcon><CheckIcon sx={{ color: '#4cc9f0' }} /></ListItemIcon>
+                    <ListItemText primary= "Mazkur Nizom iqtidorli qizlarni kashf qilish hamda ularning ilmiy-tadqiqot va innovatsion faoliyatini samarali yo'lga qo'yish uchun qo'shimcha shart-sharoitlar yaratish va qo'llab-quvvatlashga qaratilgan."/>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon><CheckIcon sx={{ color: '#4cc9f0' }} /></ListItemIcon>
+                    <ListItemText primary="Ishtirokchilar yoshi: 16 yoshdan 30 yoshgacha." />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon><CheckIcon sx={{ color: '#4cc9f0' }} /></ListItemIcon>
+                    <ListItemText primary="Loyiha tili: O'zbek yoki Ingliz tili." />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon><CheckIcon sx={{ color: '#4cc9f0' }} /></ListItemIcon>
+                    <ListItemText primary="Tanlov 'ta'lim', 'sun'iy intellekt', 'iqlim o'zgarishi', 'yashil iqtisodiyot' kabi yo'nalishlarni qamrab oladi." />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon><CheckIcon sx={{ color: '#4cc9f0' }} /></ListItemIcon>
+                    <ListItemText primary= "Tanlov jarayonlari to'liq video tasvirga olinadi hamda tegishli bosqich tashkiliy qo'mitasi tomonidan kamida bir yil saqlanadi." />
+                  </ListItem>
+                   <ListItem>
+                    <ListItemIcon><CheckIcon sx={{ color: '#4cc9f0' }} /></ListItemIcon>
+                    <ListItemText primary=                   "Tanlovning bir bosqichidan keyingi bosqichiga o'tish vaqtida loyiha nomi va yo'nalishi o'zgartirilmaydi." />
+                  </ListItem>            
+                </List>
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion expanded={expanded === 'section2'} onChange={handleChange('section2')} elevation={0}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#f72585' }} />}>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <GavelIcon sx={{ color: '#f72585' }} />
+                  <Typography fontWeight={600}>Baholash Mezonlari</Typography>
+                </Stack>
+              </AccordionSummary>
+              <AccordionDetails sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.01)' }}>
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', p: 1 }}>
+                  Loyihalar innovatsionlik, amaliy ahamiyat va texnik murakkablik darajasi bo'yicha mustaqil hakamlar tomonidan 100 ballik tizimda baholanadi.
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+          </Box>
+        </motion.div>
+
+        {/* 4. CALL TO ACTION */}
+        <Box sx={{ mt: 15, textAlign: 'center' }}>
+          <Typography variant="h3" fontWeight={800} sx={{ mb: 4 }}>
+            Imkoniyatni Qo'ldan Boy Bermang
           </Typography>
-          
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Button 
-              variant="contained" 
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} justifyContent="center">
+            <Button
+              variant="contained"
               size="large"
               endIcon={<ArrowIcon />}
               sx={{ 
-                bgcolor: '#e91e63',
-                px: 4,
-                py: 1.5,
-                borderRadius: 2,
-                '&:hover': { bgcolor: '#d81b60' }
+                bgcolor: '#f72585', px: 6, py: 2, borderRadius: '50px', fontWeight: 700,
+                '&:hover': { bgcolor: '#b5179e', transform: 'scale(1.05)' },
+                transition: '0.3s'
               }}
             >
-              Ro'yxatdan O'tish
+              Ro'yxatdan o'tish
             </Button>
-            
-            <Button 
-              variant="outlined" 
+            <Button
+              variant="outlined"
               size="large"
               sx={{ 
-                borderColor: '#e91e63',
-                color: '#e91e63',
-                px: 4,
-                py: 1.5,
-                borderRadius: 2,
-                '&:hover': { 
-                  borderColor: '#d81b60',
-                  bgcolor: 'rgba(233, 30, 99, 0.04)'
-                }
+                borderColor: '#4cc9f0', color: '#4cc9f0', px: 6, py: 2, borderRadius: '50px', fontWeight: 700,
+                '&:hover': { borderColor: '#fff', color: '#fff', bgcolor: 'rgba(76, 201, 240, 0.1)' },
+                transition: '0.3s'
               }}
             >
-              Nizomni Yuklab Olish
+              Nizomni yuklash
             </Button>
-          </Box>
-          
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 3 }}>
-            So'nggi muddat: 2024 yil 15 Oktyabr
-          </Typography>
+          </Stack>
         </Box>
       </Container>
     </Box>
